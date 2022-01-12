@@ -1,4 +1,5 @@
 package com.springboot.bankapp.model;
+
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -77,6 +78,9 @@ public class Transaction {
 	public void setDateOfTransaction(Date dateOfTransaction) {
 		this.dateOfTransaction = dateOfTransaction;
 	}
+
+	
+
 	
 	
 }

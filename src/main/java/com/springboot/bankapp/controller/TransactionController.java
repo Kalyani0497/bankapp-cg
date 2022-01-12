@@ -13,10 +13,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.bankapp.dto.Transfer;
+import com.springboot.bankapp.model.Account;
+import com.springboot.bankapp.model.Help;
 import com.springboot.bankapp.model.Transaction;
 import com.springboot.bankapp.service.TransactionService;
 
@@ -126,4 +129,68 @@ public class TransactionController {
 		
 		return list; 
 	}
-}
+	
+	@PostMapping("/deposit/{amount}")
+	public Transaction doDeposit(Principal principal, @PathVariable("amount") double amount) {
+		/*
+		 * Deposit
+		 * 
+		 * step-1
+		 * fetch account number based on username
+		 * 
+		 * step-2
+		 * update the balance of the user and add the amount to the balance
+		 * 
+		 * step-3
+		 * add an entry in transaction table
+		 * operation type="DEPOSIT"
+		 * account_from = account_to = accountNumber
+		 */
+
+		//step 1:
+		String username=principal.getName();
+		String accountNumber = transactionService.fetchFromAccountNumber(username);
+		
+		//step-2:
+		transactionService.depositAmount(accountNumber, amount);
+		
+		//step-3:
+		Transaction transaction = new Transaction();
+		transaction.setAccountFrom(accountNumber);
+		transaction.setAccountTo(accountNumber);
+		transaction.setAmount(amount);
+		transaction.setOperationType("DEPOSIT");
+		transaction.setDateOfTransaction(new Date());
+		
+		return transactionService.saveTransaction(transaction);
+	}
+	
+	@GetMapping("/balance")
+	public double getBalance(Principal principal) {
+		String username = principal.getName();
+		String accountNumber = transactionService.fetchFromAccountNumber(username);
+		
+		Account account = transactionService.getAccountByAccountNumber(accountNumber);
+		
+		return account.getBalance();
+	} 
+	
+	@PostMapping("/help")
+	public Help postQnA(@RequestBody Help help) {
+		return transactionService.postQnA(help);
+	}
+		
+	@GetMapping("/help/{id}")
+	public Help getQnA(@PathVariable("id") Long id) {
+		return transactionService.getQnA(id);
+	}
+}	 
+		 
+		 
+		 
+		 
+		 
+		 
+		 
+	
+

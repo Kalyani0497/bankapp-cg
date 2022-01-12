@@ -38,6 +38,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		 .antMatchers("/user").authenticated()
 		 .antMatchers("/transfer").authenticated()
 		 .antMatchers("/statement/**/**").authenticated()
+		 .antMatchers("/deposit/**").authenticated()
+		 .antMatchers("/balance").authenticated()
 		 .anyRequest()
 		 .permitAll()
 		 .and()
@@ -52,4 +54,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		auth.setPasswordEncoder(getPasswordEncoder());
 		return auth; 
 	}
+	
 }

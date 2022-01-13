@@ -19,13 +19,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.bankapp.dto.Transfer;
 import com.springboot.bankapp.model.Account;
+import com.springboot.bankapp.model.Customer;
 import com.springboot.bankapp.model.Help;
 import com.springboot.bankapp.model.Transaction;
+import com.springboot.bankapp.service.CustomerService;
 import com.springboot.bankapp.service.TransactionService;
 
 @RestController
 public class TransactionController {
 
+	@Autowired
+	private CustomerService customerService;
+	
 	@Autowired
 	private TransactionService transactionService;
 	/*
@@ -183,6 +188,17 @@ public class TransactionController {
 	@GetMapping("/help/{id}")
 	public Help getQnA(@PathVariable("id") Long id) {
 		return transactionService.getQnA(id);
+	}
+	
+	@GetMapping("/customer/{id}")
+	public Customer findByid(Principal principal,@PathVariable("id") Long id) {
+		return customerService.findByid(id); 		
+	}
+	
+	@PutMapping("/customer/{id}/{address}/{city}")
+	public void putCustomer(Principal principal,@PathVariable("id") Long id, @PathVariable("address") String address,@PathVariable("city") String city) {
+	customerService.putCustomer(address,city,id);
+	
 	}
 }	 
 		 
